@@ -1,34 +1,31 @@
-import React, { Component } from "react";
-import { createAppContainer } from "react-navigation";
-import { createBottomTabNavigator } from "react-navigation-tabs";
-import Ionicons from "react-native-vector-icons/Ionicons";
-
+import * as React from "react";
+import { BottomNavigation, Text } from "react-native-paper";
 import HomeScreen from "./screens/HomeScreen";
-import LinksScreen from "./screens/LinksScreen";
+import AddItemScreen from "./screens/AddItemScreen";
 
-const App = createBottomTabNavigator(
-  {
-    Home: { screen: HomeScreen },
-    Links: { screen: LinksScreen },
-  },
-  {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        const { routeName } = navigation.state;
-        let IconComponent = Ionicons;
-        let iconName;
-        if (routeName === "Home") {
-          iconName = `ios-information-circle${focused ? "" : "-outline"}`;
-        } else if (routeName === "Links") {
-          iconName = `ios-checkmark-circle${focused ? "" : "-outline"}`;
-        }
-        return <IconComponent name={iconName} size={25} color={tintColor} />;
-      },
-    }),
-    tabBarOptions: {
-      activeTintColor: "#42f44b",
-      inactiveTintColor: "gray",
-    },
+export default class MyComponent extends React.Component {
+  state = {
+    index: 0,
+    routes: [
+      { key: "list", title: "List", icon: "book" },
+      { key: "add", title: "Add", icon: "edit" },
+    ],
+  };
+
+  _handleIndexChange = (index) => this.setState({ index });
+
+  _renderScene = BottomNavigation.SceneMap({
+    list: HomeScreen,
+    add: AddItemScreen,
+  });
+
+  render() {
+    return (
+      <BottomNavigation
+        navigationState={this.state}
+        onIndexChange={this._handleIndexChange}
+        renderScene={this._renderScene}
+      />
+    );
   }
-);
-export default createAppContainer(App);
+}
